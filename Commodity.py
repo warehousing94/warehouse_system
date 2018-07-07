@@ -24,35 +24,38 @@ class CommodityAction(object):
         
     def reduceCommodity(self,Commodity,numOfLost,Warehouse):
         number = self.getNumber(Commodity) - numOfLost
-        SQLCommand = ("UPDATE Commodity SET number=%d WHERE CommodityName=%s and Type=%s and number=%d and price=%s and WarehouseName=%s" 
+        SQLCommand = ("UPDATE Commodity SET number=%d WHERE CommodityName='%s' and Type='%s' and number=%d and price='%s' and WarehouseName='%s'" 
                       %(number,self.getName(Commodity) ,self.getType(Commodity),self.getNumber(Commodity) ,self.getPrice(Commodity) ,Warehouse.name))
         
         sting.cursor.execute(SQLCommand)
         sting.connection.commit()
         
     def delCommodity(self,Commodity, Warehouse):
-        SQLCommand = ("DELETE FROM Commodity WHERE CommodityName=%s and Type=%s and number=%d and price=%s and  WarehouseName=%s "%(Commodity.name ,Commodity.Type ,Commodity.number ,Commodity.price,Warehouse.name))
+        SQLCommand = ("DELETE FROM Commodity WHERE CommodityName='%s' and Type='%s' and number=%d and price='%s' and  WarehouseName='%s' "%(Commodity.name ,Commodity.Type ,Commodity.number ,Commodity.price,Warehouse.name))
         
         sting.cursor.execute(SQLCommand)
         sting.connection.commit()
         
     def editCommodity(self, Commodity, newName, newType, newNumber, newPrice, Warehouse):
-         SQLCommand = ("UPDATE Commodity SET CommodityName=%s ,Type=%s ,number=%d ,price=%s WHERE CommodityName=%s ,Type=%s ,number=%d ,price=%s "
-                       %(newName, newType, newNumber, newPrice,self.getName(Commodity) ,self.getType(Commodity)
-                        ,self.getNumber(Commodity) ,self.getPrice(Commodity) ,Warehouse.name))
+         SQLCommand = ("UPDATE Commodity SET CommodityName='%s' , Type='%s' , number=%d , price='%s' WHERE CommodityName='%s' and Type='%s' and number=%d and price='%s' and WarehouseName='%s'"
+                       %(newName, newType, newNumber, newPrice,self.getName(Commodity) ,self.getType(Commodity),self.getNumber(Commodity) ,self.getPrice(Commodity) ,Warehouse.name))
                       
-                      
+         sting.cursor.execute(SQLCommand)
+         sting.connection.commit()
+             
     def getTotalNumOfCommodity(self,Warehouse):
-        Total = pd.read_sql("SELECT SUM(number) FROM Commodity WHERE WarehouseName='%s' "
-                            %(Warehouse.name))
-        return Total
         
+        query = ("SELECT SUM(number) AS Total  FROM Commodity WHERE WarehouseName='%s'"%(Warehouse.name))
+        sting.cursor.execute(query)
+        results = sting.cursor.fetchone()  
+        r=str(results)
+        removed = r.replace("(", "")
+        removed2 = removed.replace(", )", "")
+        print str(removed2)
+   
+     
         
-    """def checkEmptyOfCapacity(self,Warehouse):
-        if Warehouse.capacity == 0.0 :
-            return "capacity of "
-    """ 
-        
+        sting.connection.commit()
         
     def showAllCommodity(self,Warehouse):
         showCommodities = pd.read_sql("SELECT CommodityName FROM Commodity WHERE WarehouseName='%s' "
