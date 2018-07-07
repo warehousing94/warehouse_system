@@ -18,3 +18,4 @@ class Request(object):
         self.CommodityName = Commodity.name
         self.sender = Manager.username
         self.reciever = Company.name
+        #
