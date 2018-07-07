@@ -16,11 +16,13 @@ from CommodityAction import CommodityAction
 class OrderAction(object):
     def orderCommodity(self ,OrderDetail ,Commodity ,Warehouse,Company):
             SQLCommand = ("INSERT INTO Order"
-                      "(orderNumber, date, status, CommodityName ,Type ,number ,price ,ComapanyName,WarehouseName)"
-                      " VALUES ('%d','%s','%s','%s','%s','%d','%s','%s')"
+                      "(orderNumber, date, status, CommodityName ,Type ,number ,price ,WarehouseName,ComapanyName)"
+                      " VALUES ('%d','%s','%s','%s','%s','%d','%s','%s','%s')"
                       %(self.getOrderNumber(OrderDetail),self.getDate(OrderDetail),'2',
-                        Commodity.name,Commodity.Type,Commodity.number,Commodity.price, Company.name,Warehouse.name))
-    
+                        Commodity.name,Commodity.Type,Commodity.number,Commodity.price,Warehouse.name,Company.name))
+            
+            sting.cursor.execute(SQLCommand)
+            sting.connection.commit()
     def numberOfOrder(self, Commodity, Warehouse ,Company):
         orderNum = pd.read_sql("SELECT number FROM Order WHERE (CommodityName,CompanyName,WarehouseName)"
                                "VALUES('%s','%s','%s')"%(Commodity.name,Company.name,Warehouse.name))
