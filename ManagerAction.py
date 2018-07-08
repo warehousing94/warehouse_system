@@ -38,32 +38,39 @@ class ManagerAction(object):
     
         
     def delWarehouse(self, Warehouse, Company):
-        SQLCommand = ("DELETE FROM Warehouse WHERE "
-                      "(WarehouseName, Capacity)"
-                      "VALUES ('%s','%s')"%
-                       (Warehouse.name,Warehouse.capacity))
+        SQLCommand = ("DELETE FROM Warehouse WHERE WarehouseName='%s' and Capacity='%s'"%(Warehouse.name,Warehouse.capacity))
         
         sting.cursor.execute(SQLCommand)
         sting.connection.commit()
       
     
     def editWarehouse(self, Warehouse,newName,newCapacity):
-        SQLCommand = ("UPDATE Warehouse SET WarehouseName=%s,Capacity=%f WHERE WarehouseName=%s, Capacity=%f"
-                     %(newName,newCapacity,Warehouse.name,Warehouse.capacity))
-                     
+        SQLCommand = ("UPDATE Warehouse SET WarehouseName='%s',Capacity='%s' WHERE WarehouseName='%s' and Capacity='%s'"%(newName,newCapacity,Warehouse.name,Warehouse.capacity))
+        sting.cursor.execute(SQLCommand)
+        sting.connection.commit()             
                       
     
     def showWarehouse(self,Manager):
-        warehouseData = pd.read_sql("SELECT * FROM Warehouse WHERE"
-                     "(Username, Password, Email)"
-                     "VALUES ('%s','%s','%s')"%
+        query=("SELECT * FROM Warehouse WHERE Username='%s' and Password='%s' and Email='%s'"%
                      (self.getUsername(Manager),self.getPassword(Manager),
                       self.getEmail(Manager)))
-        return warehouseData
+        sting.cursor.execute(query)
+        results = sting.cursor.fetchall()
+        for row in results:
+            r=str(row)
+            removed = r.replace("u'", "")
+            removed2 = removed.replace("'", "")
+            print str(removed2)
         
     def showAllCompanies(self):
-       ListOfCompanies = pd.read_sql("SELECT CompanyName FROM Company")
-       return ListOfCompanies
+       query=("SELECT CompanyName FROM Company")
+       sting.cursor.execute(query)
+       results = sting.cursor.fetchall()
+       for row in results:
+            r=str(row)
+            removed = r.replace("u'", "")
+            removed2 = removed.replace("'", "")
+            print str(removed2)
   
     def getUsername(self,Manager):
         return Manager.username
@@ -74,6 +81,6 @@ class ManagerAction(object):
     def getEmail(self,Manager):
         return Manager.email
     
-        
+       
     
     
