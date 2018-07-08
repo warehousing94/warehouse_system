@@ -58,20 +58,36 @@ class CommodityAction(object):
         sting.connection.commit()
         
     def showAllCommodity(self,Warehouse):
-        showCommodities = pd.read_sql("SELECT CommodityName FROM Commodity WHERE WarehouseName='%s' "
+        query=("SELECT CommodityName FROM Commodity WHERE WarehouseName='%s' "
                                       %(Warehouse.name))
-        return showCommodities
+        sting.cursor.execute(query)
+        results = sting.cursor.fetchall()
+        for row in results:
+            r=str(row)
+            removed = r.replace("u'", "")
+            removed2 = removed.replace("'", "")
+            print str(removed2)
         
     def checkNumOfCommodity(self,Commodity):
-        numOfCommodity = pd.read_sql("SELECT number FROM Commodity WHERE (CommodityName ,Type ,price)"
-                                     "VALUES('%s','%s','%s')"
-                                     %(Commodity.name,Commodity.Type, Commodity.price))
-        return numOfCommodity
+        query=("SELECT number FROM Commodity WHERE CommodityName='%s' and Type='%s' and price='%s'"%(Commodity.name,Commodity.Type, Commodity.price))
+        sting.cursor.execute(query)
+        results = sting.cursor.fetchone()  
+        r=str(results)
+        removed = r.replace("(", "")
+        removed2 = removed.replace(", )", "")
+        print str(removed2)
     
-    def showSpecificationCommodity(self, Commodity):
-        showSpecification = pd.read_sql("SELECT * FROM Commodity WHERE WarehouseName='%s' "
+    def showSpecificationCommodity(self, Commodity,Warehouse):
+        query=("SELECT * FROM Commodity WHERE WarehouseName='%s' "
                                         %(Warehouse.name))
-        return showSpecification
+        sting.cursor.execute(query)
+        results = sting.cursor.fetchall()
+        for row in results:
+            r=str(row)
+            removed = r.replace("u'", "")
+            removed2 = removed.replace("'", "")
+            print str(removed2)
+        
 
     def getName(self,Commodity):
         return Commodity.name        
@@ -86,7 +102,7 @@ class CommodityAction(object):
         return Commodity.price
     
       
-        
+ #showSpecificationCommodity and showAllCommodity not   
         
         
         
